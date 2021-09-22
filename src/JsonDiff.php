@@ -490,7 +490,7 @@ class JsonDiff
         }
 
         ksort($newRearranged);
-        $newRearranged = array_values($newRearranged);
+
         return $newRearranged;
     }
 
@@ -535,7 +535,6 @@ class JsonDiff
         }
 
         ksort($newRearranged);
-        $newRearranged = array_values($newRearranged);
 
         return $newRearranged;
     }
