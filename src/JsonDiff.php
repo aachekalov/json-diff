@@ -503,13 +503,13 @@ class JsonDiff
 
         $origIdx = [];
         foreach ($original as $i => $item) {
-            $hash = $this->jsonHashOriginal->xorHash($item);
+            $hash = json_encode($item);
             $origIdx[$hash][] = $i;
         }
 
         $newIdx = [];
         foreach ($new as $i => $item) {
-            $hash = $this->jsonHashNew->xorHash($item);
+            $hash = json_encode($item);
             $newIdx[$i] = $hash;
         }
 
