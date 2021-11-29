@@ -306,7 +306,6 @@ class JsonDiff
 
         $originalKeys = $original instanceof \stdClass ? get_object_vars($original) : $original;
         $isArray = is_array($original);
-        $removedOffset = 0;
 
         if ($merge && is_array($new) && !is_array($original)) {
             $merge = false;
@@ -318,6 +317,9 @@ class JsonDiff
 
         $isUriFragment = (bool)($this->options & self::JSON_URI_FRAGMENT_ID);
         $diffCnt = $this->addedCnt + $this->modifiedCnt + $this->removedCnt;
+        if ($isArray) {
+            $originalKeys = array_reverse($originalKeys, true);
+        }
         foreach ($originalKeys as $key => $originalValue) {
             if ($this->options & self::STOP_ON_DIFF) {
                 if ($this->modifiedCnt || $this->addedCnt || $this->removedCnt) {
@@ -327,12 +329,8 @@ class JsonDiff
 
             $path = $this->path;
             $pathItems = $this->pathItems;
-            $actualKey = $key;
-            if ($isArray && is_int($actualKey)) {
-                $actualKey -= $removedOffset;
-            }
-            $this->path .= '/' . JsonPointer::escapeSegment((string)$actualKey, $isUriFragment);
-            $this->pathItems[] = $actualKey;
+            $this->path .= '/' . JsonPointer::escapeSegment((string)$key, $isUriFragment);
+            $this->pathItems[] = $key;
 
             if (array_key_exists($key, $newArray)) {
                 $newOrdered[$key] = $this->process($originalValue, $newArray[$key]);
@@ -343,9 +341,6 @@ class JsonDiff
                     return null;
                 }
                 $this->removedPaths [] = $this->path;
-                if ($isArray) {
-                    $removedOffset++;
-                }
 
                 if ($this->jsonPatch !== null) {
                     $this->jsonPatch->op(new Remove($this->path));
