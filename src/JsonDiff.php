@@ -343,7 +343,7 @@ class JsonDiff
                 $this->removedPaths [] = $this->path;
 
                 if ($this->jsonPatch !== null) {
-                    $this->jsonPatch->op(new Remove($this->path));
+                    $this->jsonPatch->op(new Remove($this->path, $originalValue));
                 }
 
                 JsonPointer::add($this->removed, $this->pathItems, $originalValue);

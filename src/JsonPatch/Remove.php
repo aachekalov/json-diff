@@ -2,7 +2,7 @@
 
 namespace Swaggest\JsonDiff\JsonPatch;
 
-class Remove extends OpPath
+class Remove extends OpPathValue
 {
     const OP = 'remove';
 }
